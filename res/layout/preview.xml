@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+    <SurfaceView
+            android:id="@+id/previewFrame"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            />
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" android:layout_marginLeft="5dp" android:layout_marginRight="5dp">
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="Cur threshold:"
+                    android:id="@+id/previewBarTextView"
+                    android:layout_marginRight="5dp"
+                    android:gravity="center_vertical" android:width="110dp" android:textStyle="bold"/>
+            <SeekBar
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/previewBar"
+                    android:layout_gravity="bottom"
+                    android:clickable="false"/>
+        </LinearLayout>
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="Max threshold:"
+                    android:id="@+id/thresholdBarTextView"
+                    android:layout_marginRight="5dp"
+                    android:gravity="center_vertical" android:width="110dp" android:textStyle="bold"/>
+            <SeekBar
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/thresholdBar"
+                    android:layout_gravity="bottom"
+                    android:clickable="false"/>
+        </LinearLayout>
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="Pix threshold:"
+                    android:id="@+id/pixelThresholdBarTextView"
+                    android:layout_marginRight="5dp"
+                    android:gravity="center_vertical" android:width="110dp" android:textStyle="bold"/>
+            <SeekBar
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/pixelThresholdBar"
+                    android:layout_gravity="bottom"
+                    android:clickable="false"/>
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

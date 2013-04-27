@@ -1,0 +1,144 @@
+package com.techq.PhotoMotion;
+
+import android.app.Activity;
+import android.content.pm.ActivityInfo;
+import android.hardware.Camera;
+import android.os.Bundle;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.SeekBar;
+import android.widget.Toast;
+import com.techq.PhotoMotion.data.Detector;
+import com.techq.PhotoMotion.data.Global;
+import com.techq.PhotoMotion.data.Preferences;
+
+import java.io.IOException;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+public class PreviewActivity extends Activity implements SurfaceHolder.Callback, Camera.PreviewCallback {
+
+    private Camera camera = null;
+    private Detector detector;
+
+    private final long startTime = System.currentTimeMillis();
+    private long lastFrameTime = startTime;
+    private static volatile AtomicBoolean isPhotoProcessing = new AtomicBoolean(false);
+    private byte[] prevDataFrame = null;
+
+    private int curWidth = Preferences.PREVIEW_WIDTH;
+    private int curHeight = Preferences.PREVIEW_HEIGHT;
+
+    private SeekBar previewBar;
+    private SeekBar thresholdBar;
+    private SeekBar pixelThresholdBar;
+
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        setContentView(R.layout.preview);
+
+        previewBar = (SeekBar) findViewById(R.id.previewBar);
+
+        thresholdBar = (SeekBar) findViewById(R.id.thresholdBar);
+        thresholdBar.setMax(100);
+        thresholdBar.setProgress(Preferences.PICTURE_THRESHOLD_PERCENT);
+
+        pixelThresholdBar = (SeekBar) findViewById(R.id.pixelThresholdBar);
+        pixelThresholdBar.setMax(255);
+        pixelThresholdBar.setProgress(Preferences.PIXEL_THRESHOLD);
+
+        SurfaceView surfaceView = (SurfaceView) findViewById(R.id.previewFrame);
+        SurfaceHolder surfaceHolder = surfaceView.getHolder();
+        surfaceHolder.addCallback(this);
+        surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+    }
+
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+        changeSize(width, height);
+        detector.UpdateSettings(curWidth, curHeight, Preferences.PIXEL_THRESHOLD, Preferences.PICTURE_THRESHOLD());
+        Camera.Parameters parameters = camera.getParameters();
+        parameters.setPreviewSize(curWidth, curHeight);
+        camera.setParameters(parameters);
+        camera.startPreview();
+    }
+
+    @Override
+    public void surfaceCreated(SurfaceHolder holder) {
+        detector = new Detector(curWidth, curHeight, Preferences.PIXEL_THRESHOLD, Preferences.PICTURE_THRESHOLD());
+        camera = Camera.open();
+        if (camera != null) {
+            try {
+                camera.setPreviewDisplay(holder);
+                camera.setPreviewCallback(this);
+                camera.startPreview();
+            } catch (IOException e) {
+                camera.release();
+                camera = null;
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public void surfaceDestroyed(SurfaceHolder holder) {
+        if (camera != null) {
+            camera.setPreviewCallback(null);
+            camera.stopPreview();
+            camera.release();
+            camera = null;
+        }
+        detector = null;
+        if (Global.SavePreferences()) {
+            Toast.makeText(this, "Settings saved", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void onPreviewFrame(byte[] dataFrame, Camera paramCamera) {
+        if (dataFrame == null) {
+            return;
+        }
+
+        long nowTime = System.currentTimeMillis();
+        if (nowTime < (lastFrameTime + Preferences.PREVIEW_DELAY)) {
+            return;
+        }
+        lastFrameTime = nowTime;
+
+        int value = 0;
+        value = detector.CompareAndResult(dataFrame);
+
+        if (prevDataFrame != null && isPhotoProcessing.compareAndSet(false, true)) {
+            Preferences.PICTURE_THRESHOLD_PERCENT = thresholdBar.getProgress();
+            Preferences.PIXEL_THRESHOLD = pixelThresholdBar.getProgress();
+
+            int value = 0;
+            try {
+                value = Global.CompareAndResult(dataFrame, prevDataFrame, curWidth, curHeight, Preferences.PIXEL_THRESHOLD);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            previewBar.setProgress(value);
+            isPhotoProcessing.set(false);
+        }
+
+
+        prevDataFrame = dataFrame.clone();
+    }
+
+    private void changeSize(int w, int h) {
+        curWidth = w;
+        curHeight = h;
+        prevDataFrame = null;
+        previewBar.setMax(curWidth * curHeight);
+    }
+}

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/scrollView" android:paddingLeft="10dp" android:paddingRight="10dp">
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="Pixel threshold:"
+                    android:id="@+id/pixelThresholdTextView"
+                    android:layout_marginRight="10dp"
+                    android:gravity="center_vertical" android:width="140dp"/>
+            <EditText
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:id="@+id/pixelThresholdEditText"
+                    android:layout_gravity="left|center_vertical" android:layout_marginTop="5dp"
+                    android:layout_marginBottom="3dp" android:editable="true"
+                    android:inputType="numberSigned"/>
+        </LinearLayout>
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="Threshold percent:"
+                    android:id="@+id/thresholdPercentTextView"
+                    android:layout_marginRight="10dp"
+                    android:gravity="center_vertical" android:width="140dp"/>
+            <EditText
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:id="@+id/thresholdPercentEditText"
+                    android:layout_gravity="left|center_vertical" android:layout_marginTop="5dp"
+                    android:layout_marginBottom="3dp" android:editable="true"
+                    android:inputType="numberSigned"/>
+        </LinearLayout>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0 pixels"
+                android:id="@+id/thresholdTextView"
+                android:layout_marginLeft="173dp"
+                android:gravity="center_vertical"/>
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="Picture delay:"
+                    android:id="@+id/pictureDelayTextView"
+                    android:layout_marginRight="10dp"
+                    android:gravity="center_vertical" android:width="140dp"/>
+            <EditText
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:id="@+id/pictureDelayEditText"
+                    android:layout_gravity="left|center_vertical" android:layout_marginTop="5dp"
+                    android:layout_marginBottom="3dp" android:editable="true"
+                    android:inputType="numberSigned"/>
+        </LinearLayout>
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="Frame delay:"
+                    android:id="@+id/frameDelayTextView"
+                    android:layout_marginRight="10dp"
+                    android:gravity="center_vertical" android:width="140dp"/>
+            <EditText
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:id="@+id/frameDelayEditText"
+                    android:layout_gravity="left|center_vertical" android:layout_marginTop="5dp"
+                    android:layout_marginBottom="3dp" android:editable="true"
+                    android:inputType="numberSigned"/>
+        </LinearLayout>
+        <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Autostart service"
+                android:id="@+id/autostartCheckBox"
+                android:onClick="autostartCheckBoxOnClick" android:enabled="true" android:checked="false"/>
+    </LinearLayout>
+</ScrollView>
